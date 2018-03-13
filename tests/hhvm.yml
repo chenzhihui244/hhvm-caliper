@@ -1,0 +1,7 @@
+---
+
+- hosts: hhvm-host
+
+  roles:
+    - role: hhvm-caliper
+      build_hhvm: true

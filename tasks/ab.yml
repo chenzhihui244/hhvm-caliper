@@ -1,0 +1,15 @@
+---
+
+- import_tasks: common.yml
+
+- name: Install ab on Redhat
+  yum:
+      name: httpd-tools
+      state: present
+  when: ansible_distribution == 'RedHat'
+
+- name: Install ab on Ubuntu
+  apt:
+      name: apache2-utils
+      state: present
+  when: ansible_distribution == 'Ubuntu'

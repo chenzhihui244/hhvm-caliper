@@ -1,5 +1,45 @@
 ---
-- hosts: localhost
-  remote_user: root
+
+- hosts: server-host
   roles:
-    - hhvm-caliper
+      - role: hhvm-caliper
+
+  tasks:
+      - name: Start server
+        service:
+            name: nginx
+            state: started
+            enabled: true
+
+- hosts: hhvm-host
+  roles:
+      - role: hhvm-caliper
+
+  tasks:
+      - name: Start hhvm
+        service:
+            name: hhvm
+            state: started
+            enabled: true
+
+- hosts: client-host
+  roles:
+  - role: hhvm-caliper
+    hhvm_client: "{{ hhvm_client }}"
+
+  vars:
+    target_url: "http://{{ groups['server-host'][0] }}/test_bench.php"
+    log_file: "hhvm-{{ hhvm_client }}.log"
+
+  tasks:
+  - name: ab hhvm benchmark
+    shell:
+      export LD_LIBRARY_PATH={{ installdir }}/lib:$LD_LIBRARY_PATH;
+      export PATH={{ installdir }}/bin:$PATH;
+      {{ hhvm_client }} -c {{ connections }} -n {{ requests }} {{ target_url }} > {{ outputdir }}/{{ log_file }}
+
+  - name: Fetch result
+    fetch:
+        src={{ outputdir }}/{{ log_file }}
+        dest=/tmp/{{ log_file }}
+        flat=yes

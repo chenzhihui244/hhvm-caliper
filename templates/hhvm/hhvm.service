@@ -1,0 +1,12 @@
+[Unit]
+Description=HHVM HipHop Virtual Machine (FCGI)
+After=network.target nginx.service mariadb.service
+
+[Service]
+Type=forking
+PIDFile={{ hhvm_run_path }}/pid
+ExecStart={{ installdir }}/bin/hhvm --mode daemon --user {{ hhvm_user }} -vServer.AllowRunAsRoot=1 --config {{ hhvm_conf_path }}/server.ini --config {{ hhvm_conf_path }}/php.ini --config {{ hhvm_conf_path }}/hhvm.hdf
+ExecStop=/bin/kill -s QUIT $MAINPID
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+---
+- hosts: client-host
+  remote_user: root
+  roles:
+    - role: hhvm-caliper
+      build_client: true
+      hhvm_client: ab
+

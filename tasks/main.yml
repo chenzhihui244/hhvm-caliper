@@ -1,2 +1,11 @@
 ---
 # tasks file for hhvm-caliper
+
+- include_tasks: hhvm.yml
+  when: build_hhvm | bool
+
+- include_tasks: nginx.yml
+  when: build_server | bool
+
+- include_tasks: "{{ hhvm_client }}.yml"
+  when: build_client | bool

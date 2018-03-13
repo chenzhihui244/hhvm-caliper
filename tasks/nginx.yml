@@ -1,0 +1,52 @@
+---
+
+- import_tasks: common.yml
+
+- name: Install dependencies on Redhat
+  yum:
+      name: zlib,zlib-devel,openssl,openssl-devel,pcre,pcre-devel
+      state: present
+  when: ansible_distribution == 'RedHat'
+
+- name: Install dependencies on Ubuntu
+  apt:
+      name: libpcre3,libpcre3-dev,libssl-dev,zlib1g-dev
+      state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Download nginx
+  get_url:
+      url={{ nginx_url }}
+      dest={{ pkgsdir }}
+
+- name: Unpack nginx
+  unarchive:
+      src={{ pkgsdir }}/{{ nginx_file }}
+      dest={{ builddir }}
+      remote_src=yes
+
+- name: Build nginx
+  shell:
+      cd {{ builddir }}/{{ nginx_dir }};
+      ./configure --with-http_ssl_module --prefix={{ installdir }};
+      make -j{{ ansible_processor_count }};
+      make install
+
+- name: Copy nginx service file
+  template: src=nginx/nginx.service dest=/lib/systemd/system/nginx.service
+
+- name: Copy nginx test_bench.php
+  template: src=nginx/test_bench.php dest={{ installdir }}/html/test_bench.php
+
+- name: Copy nginx index.php
+  template: src=nginx/index.php dest={{ installdir }}/html/index.php
+
+- name: Copy nginx configuration
+  template: src=nginx/nginx.conf dest={{ installdir }}/conf/nginx.conf
+  notify: restart nginx
+
+- name: Start nginx server
+  service:
+      name: nginx
+      state: started
+      enabled: yes

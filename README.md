@@ -36,3 +36,13 @@ Author Information
 ------------------
 
 An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+
+
+Benchmark example
+-----------------
+
+  Build and install nginx, hhvm, ab:
+    ansible-playbook -i hhvm-caliper/tests/inventory hhvm-caliper/tests/site.yml -e "hhvm_client=ab"
+
+  Start benchmark:
+    ansible-playbook -i hhvm-caliper/tests/inventory hhvm-caliper/tests/test.yml -e "hhvm_client=ab"

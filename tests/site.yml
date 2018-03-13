@@ -1,0 +1,17 @@
+---
+
+- hosts: server-host
+  roles:
+      - role: hhvm-caliper
+        build_server: true
+
+- hosts: hhvm-host
+  roles:
+      - role: hhvm-caliper
+        build_hhvm: true
+
+- hosts: client-host
+  roles:
+      - role: hhvm-caliper
+        build_client: true
+        hhvm_client: "{{ hhvm_client }}"

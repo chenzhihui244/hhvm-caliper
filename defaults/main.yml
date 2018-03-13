@@ -1,2 +1,61 @@
 ---
-# defaults file for hhvm-caliper
+
+build_server: false
+build_hhvm: false
+build_client: false
+
+hhvm_client: ab
+
+# defaults dir for common
+topdir: /local/hhvm-caliper
+builddir: "{{ topdir }}/build"
+pkgsdir: "{{ topdir }}/pkgs"
+installdir: "{{ topdir }}/install"
+outputdir: "{{ topdir }}/output"
+
+# automake.yml
+automake_url: https://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz
+automake_file: automake-1.15.tar.gz
+automake_dir: automake-1.15
+
+# hhvm.yml
+hhvm_url: https://github.com/facebook/hhvm.git
+hhvm_log_path: /var/log/hhvm
+hhvm_run_path: /var/run/hhvm
+hhvm_conf_path: "{{ installdir }}/etc/hhvm"
+hhvm_sock_port: 9000
+hhvm_thread_count: "{{ ansible_processor_count }}"
+hhvm_jit: "true"
+hhvm_jit_pgo: "true"
+hhvm_user: root
+
+# nginx.yml
+nginx_url: http://nginx.org/download/nginx-1.13.9.tar.gz
+nginx_file: nginx-1.13.9.tar.gz
+nginx_dir: nginx-1.13.9
+
+# nginx.conf
+nginx_worker_processes: 24
+nginx_pid_path: /run/nginx.pid
+nginx_worker_connections: 1024
+nginx_keepalive_timeout: 65
+nginx_server_name: nginx-server
+nginx_user: "{{ ansible_user_id }}"
+http_port: 80
+nginx_fastcgi_pass: "127.0.0.1:{{ hhvm_sock_port }}"
+#nginx_fastcgi_pass: "unix:{{ hhvm_run_path }}/sock"
+
+# defaults file for libev
+libev_url: https://github.com/enki/libev.git
+
+# defaults file for httpress
+httpress_url: https://bitbucket.org/yarosla/httpress/get/f27fa1949044.zip
+httpress_dir: yarosla-httpress-f27fa1949044
+
+# weighttp
+weighttp_url: git://git.lighttpd.net/weighttp
+
+# benchmark
+threads: 1
+connections: 4
+requests: 32

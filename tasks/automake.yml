@@ -1,0 +1,14 @@
+---
+
+- import_tasks: common.yml
+
+- name: Download automake
+  get_url:
+      src={{ automake_url }}
+      dest={{ pkgsdir }}/{{ automake_file }}
+
+- name: Unpack automake
+  unarchive:
+      src={{ pkgsdir }}/{{ automake_file }}
+      dest={{ builddir }}/{{ automake_dir }}
+      remote_src=yes
