@@ -45,4 +45,4 @@ Benchmark example
     ansible-playbook -i hhvm-caliper/tests/inventory hhvm-caliper/tests/site.yml -e "hhvm_client=ab"
 
   Start benchmark:
-    ansible-playbook -i hhvm-caliper/tests/inventory hhvm-caliper/tests/test.yml -e "hhvm_client=ab"
+    ansible-playbook -i hhvm-caliper/tests/inventory hhvm-caliper/tests/test.yml -e "hhvm_client=ab test_case=test_bench"

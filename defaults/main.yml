@@ -59,3 +59,4 @@ weighttp_url: git://git.lighttpd.net/weighttp
 threads: 1
 connections: 4
 requests: 32
+test_case: test_bench

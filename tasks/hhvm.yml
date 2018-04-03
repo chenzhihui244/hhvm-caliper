@@ -10,7 +10,7 @@
 
 - name: Install dependencies on Redhat
   yum:
-      name: zlib-devel,bzip2-devel,python-devel,build-essential,libtool,curl-devel,libicu-devel,tbb-devel,openssl-devel,libdwarf-devel,elfutils-libelf-devel,libcap-devel,gperf,gmp-devel,ImageMagick-devel,libxslt-devel,readline-devel,libmemcached-devel,expat-devel,libyaml-devel,binutils-devel,openldap-devel
+      name: zlib-devel,bzip2-devel,python-devel,libtool,curl-devel,libicu-devel,tbb-devel,openssl-devel,libdwarf,elfutils-libelf-devel,libcap-devel,gperftools-libs,gmp-devel,ImageMagick,libxslt-devel,readline-devel,libmemcached,expat-devel,libyaml,binutils-devel,openldap-devel
       state: present
   when: ansible_distribution == 'RedHat'
 
@@ -19,14 +19,14 @@
 
 - name: Download hhvm
   shell:
-      cd {{ builddir }}
+      cd {{ builddir }};
       git clone {{ hhvm_url }};
       cd hhvm;
       git submodule update --init --recursive
 
 - name: Build hhvm
   shell:
-      cd {{ builddir }}/hhvm
+      cd {{ builddir }}/hhvm;
       cmake -DCMAKE_INSTALL_PREFIX={{ installdir }} -DMYSQL_UNIX_SOCK_ADDR=/var/run/mysqld/mysqld.sock .;
       make -j{{ ansible_processor_count }};
       make install

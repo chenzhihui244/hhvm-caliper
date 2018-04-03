@@ -26,17 +26,24 @@
   roles:
   - role: hhvm-caliper
     hhvm_client: "{{ hhvm_client }}"
+    test_case: "{{ test_case }}"
 
   vars:
-    target_url: "http://{{ groups['server-host'][0] }}/test_bench.php"
+    target_url: "http://{{ groups['server-host'][0] }}/{{ test_case }}.php"
     log_file: "hhvm-{{ hhvm_client }}.log"
 
   tasks:
   - name: ab hhvm benchmark
     shell:
+      "{{ hhvm_client }} -c {{ connections }} -n {{ requests }} {{ target_url }} > {{ outputdir }}/{{ log_file }}"
+    when: "hhvm_client == 'ab'"
+
+  - name: httpress hhvm benchmark
+    shell:
       export LD_LIBRARY_PATH={{ installdir }}/lib:$LD_LIBRARY_PATH;
       export PATH={{ installdir }}/bin:$PATH;
-      {{ hhvm_client }} -c {{ connections }} -n {{ requests }} {{ target_url }} > {{ outputdir }}/{{ log_file }}
+      {{ hhvm_client }} -t {{ threads }} -c {{ connections }} -n {{ requests }} {{ target_url }} > {{ outputdir }}/{{ log_file }}
+    when: "hhvm_client == 'httpress'"
 
   - name: Fetch result
     fetch:
